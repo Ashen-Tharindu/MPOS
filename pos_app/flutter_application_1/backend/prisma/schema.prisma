@@ -12,6 +12,49 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("ADMIN")
+  role      Role     @default(CASHIER)
   createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  CASHIER
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  price       Float
+  quantity    Int
+  createdAt   DateTime @default(now())
+
+  sales     Sale[]
+}
+
+model Sale {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  quantity  Int
+  total     Float
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Repair {
+  id          Int      @id @default(autoincrement())
+  customer    String
+  product     String
+  issue       String
+  status      RepairStatus  @default(PENDING)
+  cost        Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum RepairStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
 }
